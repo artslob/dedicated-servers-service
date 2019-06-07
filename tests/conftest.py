@@ -5,11 +5,8 @@ import pytest
 
 from flaskr import create_app
 
-with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
-    _data_sql = f.read().decode('utf8')
 
-
-@pytest.fixture
+@pytest.fixture(scope='session')
 def app():
     db_fd, db_path = tempfile.mkstemp()
 
@@ -20,7 +17,7 @@ def app():
 
     with app.app_context():
         import flaskr.db as db
-        db.db_session.execute(_data_sql)
+        db.init_app(app)
 
     yield app
 
@@ -36,3 +33,27 @@ def client(app):
 @pytest.fixture
 def runner(app):
     return app.test_cli_runner()
+
+
+@pytest.fixture
+def default_data(app):
+    from flaskr import models
+    from flaskr.db import db_session
+    models.Rack.query.delete()
+    models.Server.query.delete()
+    db_session.commit()
+    rack = models.Rack(capacity='ten')
+    db_session.add(rack)
+    db_session.commit()
+    for i in range(5):
+        db_session.add(models.Server(rack_id=rack.id))
+        rack.size = models.Rack.size + 1
+        db_session.commit()
+
+    rack = models.Rack(capacity='twenty')
+    db_session.add(rack)
+    db_session.commit()
+    for i in range(20):
+        db_session.add(models.Server(rack_id=rack.id))
+        rack.size = models.Rack.size + 1
+        db_session.commit()
