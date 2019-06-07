@@ -44,21 +44,30 @@ class Rack(Base, ToDictMixin):
         return f'Rack: id: {self.id}, size: {self.size}, capacity: {self.capacity}'
 
 
+class ServerStatuses(enum.Enum):
+    unpaid = enum.auto()
+    paid = enum.auto()
+    active = enum.auto()
+    deleted = enum.auto()
+
+
 class Server(Base, ToDictMixin):
     __tablename__ = 'server'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     created = Column(DateTime, server_default=func.now(), nullable=False)
     changed = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
+    status = Column(alchemyEnum(ServerStatuses), default=ServerStatuses.unpaid, nullable=False)
     rack_id = Column(Integer, ForeignKey('rack.id'), nullable=False)
     rack = relationship('Rack', back_populates='servers')
 
     _to_dict_mixin_columns = ('id', 'created', 'changed', 'rack_id')
 
-    def __init__(self, rack_id, created=None, changed=None, id=None):
+    def __init__(self, rack_id, created=None, changed=None, id=None, status=None):
         self.id = id
         self.created = created
         self.changed = changed
+        self.status = status
         self.rack_id = rack_id
 
     def __repr__(self):
