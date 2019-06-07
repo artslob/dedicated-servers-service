@@ -34,6 +34,6 @@ def create_server():
     if target_rack.size >= target_rack.capacity.value:
         return jsonify({'status': 'rack is full'}), 400
     db_session.add(server)
-    target_rack.size = Rack.size + 1
+    target_rack.increase_size()
     db_session.commit()
     return jsonify({'id': server.id})

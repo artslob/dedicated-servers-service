@@ -24,7 +24,7 @@ def init_db():
     db_session.commit()
     for i in range(5):
         db_session.add(models.Server(rack_id=rack.id))
-        rack.size = models.Rack.size + 1
+        rack.increase_size()
         db_session.commit()
 
 

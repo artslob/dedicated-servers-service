@@ -49,6 +49,9 @@ class Rack(Base, ToDictMixin):
     def __repr__(self):
         return f'Rack: id: {self.id}, size: {self.size}, capacity: {self.capacity}'
 
+    def increase_size(self):
+        self.size = Rack.size + 1
+
 
 class ServerStatuses(enum.Enum):
     unpaid = enum.auto()
