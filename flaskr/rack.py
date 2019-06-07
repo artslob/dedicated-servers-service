@@ -1,6 +1,6 @@
-from flask import Blueprint
-from flask import jsonify
+from flask import Blueprint, jsonify
 
+from flaskr.common import get_order_from_arg
 from flaskr.models import Rack
 
 bp = Blueprint('rack', __name__, url_prefix='/rack')
@@ -8,7 +8,8 @@ bp = Blueprint('rack', __name__, url_prefix='/rack')
 
 @bp.route('/all', methods=('GET',))
 def all_racks():
-    rows = Rack.query.all()
+    order = get_order_from_arg(Rack)
+    rows = Rack.query.order_by(order).all()
     return jsonify([rack.as_dict() for rack in rows])
 
 

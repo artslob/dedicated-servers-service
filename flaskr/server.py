@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import jsonify
 
+from flaskr.common import get_order_from_arg
 from flaskr.models import Server
 
 bp = Blueprint('server', __name__, url_prefix='/server')
@@ -8,7 +9,8 @@ bp = Blueprint('server', __name__, url_prefix='/server')
 
 @bp.route('/all', methods=('GET',))
 def all_servers():
-    rows = Server.query.all()
+    order = get_order_from_arg(Server)
+    rows = Server.query.order_by(order).all()
     return jsonify([server.as_dict() for server in rows])
 
 
