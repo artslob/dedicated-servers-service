@@ -11,11 +11,11 @@ class Rack(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     created = Column(DateTime, server_default=func.now(), nullable=False)
     changed = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
-    size = Column(Integer, nullable=False)
+    size = Column(Integer, default=0, nullable=False)
     capacity = Column(Integer, nullable=False)
     servers = relationship('Server', back_populates='rack')
 
-    def __init__(self, size, capacity, created=None, changed=None, id=None):
+    def __init__(self, capacity, size=None, created=None, changed=None, id=None):
         self.id = id
         self.created = created
         self.changed = changed
