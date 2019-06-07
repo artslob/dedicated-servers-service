@@ -1,7 +1,7 @@
 # Dedicated servers service
 
 [![Build Status](https://travis-ci.com/artslob/selectel-dedicated-servers.svg?branch=master)](https://travis-ci.com/artslob/selectel-dedicated-servers)
-[![codecov](https://codecov.io/gh/artslob/selectel-dedicated-servers/branch/master/graph/badge.svg)](https://codecov.io/gh/artslob/selectel-dedicated-servers)
+[![codecov](https://codecov.io/gh/artslob/selectel-dedicated-servers/branch/master/graph/badge.svg?token=1hb9cxaZYv)](https://codecov.io/gh/artslob/selectel-dedicated-servers)
 
 ## Запуск сервиса
 1. Установка:
