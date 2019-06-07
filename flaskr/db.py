@@ -9,6 +9,9 @@ engine = create_engine(f'sqlite:///{app.config["DATABASE"]}', convert_unicode=Tr
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 Base = declarative_base()
 Base.query = db_session.query_property()
+from flaskr import models
+
+Base.metadata.create_all(bind=engine)
 
 
 def close_db(exp=None):
@@ -16,8 +19,6 @@ def close_db(exp=None):
 
 
 def init_db():
-    from flaskr import models
-    Base.metadata.create_all(bind=engine)
     rack = models.Rack(capacity=10)
     db_session.add(rack)
     db_session.commit()
