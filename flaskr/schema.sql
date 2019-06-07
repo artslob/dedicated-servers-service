@@ -18,3 +18,6 @@ CREATE TABLE server
     rack_id INTEGER   NOT NULL,
     FOREIGN KEY (rack_id) REFERENCES rack (id)
 );
+
+INSERT INTO rack (id, changed, size, capacity)
+VALUES (1, CURRENT_TIMESTAMP, 2, 10);
