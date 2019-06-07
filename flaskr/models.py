@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, DateTime, ForeignKey
+import enum
+
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, Enum as alchemyEnum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -14,6 +16,11 @@ class ToDictMixin:
         return {name: getattr(self, name) for name in columns}
 
 
+class RackCapacities(enum.Enum):
+    ten = 10
+    twenty = 20
+
+
 class Rack(Base, ToDictMixin):
     __tablename__ = 'rack'
 
@@ -21,7 +28,7 @@ class Rack(Base, ToDictMixin):
     created = Column(DateTime, server_default=func.now(), nullable=False)
     changed = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
     size = Column(Integer, default=0, nullable=False)
-    capacity = Column(Integer, nullable=False)
+    capacity = Column(alchemyEnum(RackCapacities), nullable=False)
     servers = relationship('Server', back_populates='rack')
 
     _to_dict_mixin_columns = ('id', 'created', 'changed', 'size', 'capacity')

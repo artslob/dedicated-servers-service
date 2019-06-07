@@ -19,7 +19,7 @@ def close_db(exp=None):
 
 
 def init_db():
-    rack = models.Rack(capacity=10)
+    rack = models.Rack(capacity='ten')
     db_session.add(rack)
     db_session.commit()
     for i in range(5):
