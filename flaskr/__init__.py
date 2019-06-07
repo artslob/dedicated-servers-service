@@ -28,10 +28,10 @@ def create_app(test_config=None):
         return 'Hello, World!'
 
     with app.app_context():
-        from . import db
+        from flaskr import db
         db.init_app(app)
 
-    from . import rack, server
+    from flaskr import rack, server
     app.register_blueprint(rack.bp)
     app.register_blueprint(server.bp)
 

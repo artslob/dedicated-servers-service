@@ -16,7 +16,7 @@ def close_db(exp=None):
 
 
 def init_db():
-    from . import models
+    from flaskr import models
     Base.metadata.create_all(bind=engine)
     rack = models.Rack(capacity=10)
     db_session.add(rack)
