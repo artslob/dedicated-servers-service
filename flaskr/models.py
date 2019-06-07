@@ -13,7 +13,13 @@ class ToDictMixin:
             columns = self._to_dict_mixin_columns
         else:
             columns = self.__table__.columns.keys()
-        return {name: getattr(self, name) for name in columns}
+        result = {}
+        for name in columns:
+            attr = getattr(self, name)
+            if isinstance(attr, enum.Enum):
+                attr = attr.name
+            result[name] = attr
+        return result
 
 
 class RackCapacities(enum.Enum):
@@ -61,7 +67,7 @@ class Server(Base, ToDictMixin):
     rack_id = Column(Integer, ForeignKey('rack.id'), nullable=False)
     rack = relationship('Rack', back_populates='servers')
 
-    _to_dict_mixin_columns = ('id', 'created', 'changed', 'rack_id')
+    _to_dict_mixin_columns = ('id', 'created', 'changed', 'rack_id', 'status')
 
     def __init__(self, rack_id, created=None, changed=None, id=None, status=None):
         self.id = id
