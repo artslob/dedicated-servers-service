@@ -12,3 +12,14 @@ def all_racks():
     columns = ('id', 'created', 'changed', 'size', 'capacity')
     result = [{name: getattr(rack, name, '<empty>') for name in columns} for rack in rows]
     return jsonify(result)
+
+
+@bp.route('/<int:id>', methods=('GET',))
+def get_rack(id):
+    rack = Rack.query.get(id)
+    if not rack:
+        return jsonify({}), 404
+
+    # TODO make rack and server json-serializable
+    columns = ('id', 'created', 'changed', 'size', 'capacity')
+    return jsonify({name: getattr(rack, name, '<empty>') for name in columns})
