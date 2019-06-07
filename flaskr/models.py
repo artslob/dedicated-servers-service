@@ -78,3 +78,14 @@ class Server(Base, ToDictMixin):
 
     def __repr__(self):
         return f'Server: id: {self.id}, rack id: {self.rack_id}'
+
+    @classmethod
+    def from_json(cls, content):
+        if not content or not isinstance(content, dict):
+            return None
+
+        columns = ('rack_id',)
+        if any(c not in content for c in columns):
+            return None
+
+        return Server(**{c: content[c] for c in columns})
