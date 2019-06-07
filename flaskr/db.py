@@ -20,6 +20,10 @@ def init_db():
     rack = models.Rack(size=0, capacity=10)
     db_session.add(rack)
     db_session.commit()
+    for i in range(5):
+        db_session.add(models.Server(rack_id=rack.id))
+        rack.size = models.Rack.size + 1
+    db_session.commit()
 
 
 @click.command('init-db')
