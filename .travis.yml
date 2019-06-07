@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.6-dev"
+install:
+  - pip install -r requirements.txt
+  - pip install pytest-cov codecov
+script:
+  - python3 -m pytest --cov-report=xml --cov=. tests/ -s
+after_success:
+  - codecov
