@@ -18,6 +18,7 @@
     ```bash
     export FLASK_APP=flaskr
     export FLASK_END=development
+    flask init-db
     flask run
     ```
 4. Доступные эндпоинты:
