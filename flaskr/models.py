@@ -57,6 +57,9 @@ class Rack(Base, ToDictMixin):
     def increase_size(self):
         self.size = Rack.size + 1
 
+    def decrease_size(self):
+        self.size = Rack.size - 1
+
 
 class ServerStatuses(enum.Enum):
     unpaid = enum.auto()
