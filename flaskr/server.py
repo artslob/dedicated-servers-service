@@ -64,22 +64,25 @@ def update_server(id):
 
     # moving server to another rack
     if 'rack_id' in content:
-        rack_id = content['rack_id']
-        if not isinstance(rack_id, int):
-            return response('rack_id must be integer', status=400)
-        if rack_id == server.rack_id:
-            return response('server already on this rack', status=400)
-        target_rack = Rack.query.get(rack_id)
-        if not target_rack:
-            return response(f'rack with id: {rack_id} does not exist', status=400)
-        if target_rack.size >= target_rack.capacity.value:
-            return response('rack is full', status=400)
-        source_rack = Rack.query.get(server.rack_id)
-        source_rack.decrease_size()
-        target_rack.increase_size()
-        server.rack = target_rack
-        db_session.commit()
-        return response('ok')
+        return move_server_to_rack(server, content['rack_id'])
 
     # TODO changing server status
+    return response('ok')
+
+
+def move_server_to_rack(server, rack_id):
+    if not isinstance(rack_id, int):
+        return response('rack_id must be integer', status=400)
+    if rack_id == server.rack_id:
+        return response('server already on this rack', status=400)
+    target_rack = Rack.query.get(rack_id)
+    if not target_rack:
+        return response(f'rack with id: {rack_id} does not exist', status=400)
+    if target_rack.size >= target_rack.capacity.value:
+        return response('rack is full', status=400)
+    source_rack = Rack.query.get(server.rack_id)
+    source_rack.decrease_size()
+    target_rack.increase_size()
+    server.rack = target_rack
+    db_session.commit()
     return response('ok')
