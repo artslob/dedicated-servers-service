@@ -102,8 +102,7 @@ def move_server_to_rack(server, rack_id):
         return response(f'rack with id: {rack_id} does not exist', status=400)
     if target_rack.size >= target_rack.capacity.value:
         return response('rack is full', status=400)
-    source_rack = Rack.query.get(server.rack_id)
-    source_rack.decrease_size()
+    server.rack.decrease_size()
     target_rack.increase_size()
     server.rack = target_rack
     db_session.commit()
