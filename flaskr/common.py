@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, jsonify
 
 
 def get_order_from_arg(model, sort_arg='sort'):
@@ -10,3 +10,7 @@ def get_order_from_arg(model, sort_arg='sort'):
     else:
         order = model.id
     return order
+
+
+def service_response(message: str, *, status=200):
+    return jsonify({'status': message}), status

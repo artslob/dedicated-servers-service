@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 
-from flaskr.common import get_order_from_arg
+from flaskr.common import get_order_from_arg, service_response as response
 from flaskr.models import Rack
 
 bp = Blueprint('rack', __name__, url_prefix='/rack')
@@ -17,6 +17,6 @@ def all_racks():
 def get_rack(id):
     rack = Rack.query.get(id)
     if not rack:
-        return jsonify({}), 404
+        return response(f'rack id: {id} doest not exist', status=404)
 
     return jsonify(rack.as_dict())
