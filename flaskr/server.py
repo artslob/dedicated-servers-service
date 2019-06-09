@@ -62,11 +62,33 @@ def update_server(id):
     if not any(arg in content for arg in valid_args):
         return response(f'got unknown arg. arg should be one of this: {valid_args}', status=400)
 
-    # moving server to another rack
     if 'rack_id' in content:
         return move_server_to_rack(server, content['rack_id'])
 
-    # TODO changing server status
+    return update_server_status(server, content['status'])
+
+
+def update_server_status(server, next_status):
+    """this method assumes that server.status != deleted"""
+    if server.status == ServerStatuses.deleted:
+        return response('ok')
+
+    if not next_status or not isinstance(next_status, str):
+        return response('invalid status', status=400)
+
+    if next_status not in ServerStatuses.status_names():
+        return response('unknown status', status=400)
+
+    next_status = ServerStatuses[next_status]
+
+    if next_status == ServerStatuses.deleted:
+        server.rack.decrease_size()
+        server.rack = None
+    elif server.status.value + 1 != next_status.value:
+        return response('new status should be next in the sequence', status=400)
+
+    server.status = next_status
+    db_session.commit()
     return response('ok')
 
 

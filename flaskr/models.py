@@ -67,6 +67,10 @@ class ServerStatuses(enum.Enum):
     active = enum.auto()
     deleted = enum.auto()
 
+    @classmethod
+    def status_names(cls):
+        return [e.name for e in cls]
+
 
 class Server(Base, ToDictMixin):
     __tablename__ = 'server'
@@ -75,7 +79,7 @@ class Server(Base, ToDictMixin):
     created = Column(DateTime, server_default=func.now(), nullable=False)
     changed = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
     status = Column(alchemyEnum(ServerStatuses), default=ServerStatuses.unpaid, nullable=False)
-    rack_id = Column(Integer, ForeignKey('rack.id'), nullable=False)
+    rack_id = Column(Integer, ForeignKey('rack.id'), nullable=True)
     rack = relationship('Rack', back_populates='servers')
 
     _to_dict_mixin_columns = ('id', 'created', 'changed', 'rack_id', 'status')
