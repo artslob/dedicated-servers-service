@@ -42,7 +42,7 @@ def default_data(app):
     models.Rack.query.delete()
     models.Server.query.delete()
     db_session.commit()
-    rack = models.Rack(capacity='ten')
+    rack = models.Rack(capacity=models.RackCapacities.ten)
     db_session.add(rack)
     db_session.commit()
     for i in range(5):
@@ -50,7 +50,7 @@ def default_data(app):
         rack.size = models.Rack.size + 1
         db_session.commit()
 
-    rack = models.Rack(capacity='twenty')
+    rack = models.Rack(capacity=models.RackCapacities.twenty)
     db_session.add(rack)
     db_session.commit()
     for i in range(20):

@@ -1,6 +1,6 @@
 import enum
 
-from sqlalchemy import Column, Integer, DateTime, ForeignKey, Enum as alchemyEnum
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, Enum as alchemyEnum, CheckConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -29,22 +29,27 @@ class RackCapacities(enum.Enum):
 
 class Rack(Base, ToDictMixin):
     __tablename__ = 'rack'
+    __table_args__ = (
+        CheckConstraint('size <= capacity_int'),
+    )
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     created = Column(DateTime, server_default=func.now(), nullable=False)
     changed = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
     size = Column(Integer, default=0, nullable=False)
+    capacity_int = Column(Integer, nullable=False)
     capacity = Column(alchemyEnum(RackCapacities), nullable=False)
     servers = relationship('Server', back_populates='rack')
 
-    _to_dict_mixin_columns = ('id', 'created', 'changed', 'size', 'capacity')
+    _to_dict_mixin_columns = ('id', 'created', 'changed', 'size', 'capacity', 'capacity_int')
 
-    def __init__(self, capacity, size=None, created=None, changed=None, id=None):
+    def __init__(self, capacity: RackCapacities, size=None, created=None, changed=None, id=None):
         self.id = id
         self.created = created
         self.changed = changed
         self.size = size
         self.capacity = capacity
+        self.capacity_int = capacity.value
 
     def __repr__(self):
         return f'Rack: id: {self.id}, size: {self.size}, capacity: {self.capacity}'
