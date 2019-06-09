@@ -67,6 +67,8 @@ def update_server(id):
         rack_id = content['rack_id']
         if not isinstance(rack_id, int):
             return response('rack_id must be integer', status=400)
+        if rack_id == server.rack_id:
+            return response('server already on this rack', status=400)
         target_rack = Rack.query.get(rack_id)
         if not target_rack:
             return response(f'rack with id: {rack_id} does not exist', status=400)
